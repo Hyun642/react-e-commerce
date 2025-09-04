@@ -1,22 +1,19 @@
-import React, { useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import styled from "@emotion/styled"; // styled import
+import styled from "@emotion/styled";
+import { login } from "../api/auth/login";
 
 function Login() {
-     const [username, setUsername] = useState("");
-     const [password, setPassword] = useState("");
+     const [email, setUserEmail] = useState("qwe@123.com");
+     const [password, setPassword] = useState("qwe123");
      const navigate = useNavigate();
 
      const handleLogin = async (e) => {
           e.preventDefault();
           try {
-               const response = await axios.post("http://localhost:3001/auth/login", {
-                    username,
-                    password,
-               });
-               console.log("로그인 성공:", response.data);
-               navigate("/main");
+               const response = await login(email, password);
+               if (response.accessToken) navigate("/main");
+               else if (response.statusCode === 401) alert(response.message);
           } catch (error) {
                console.error("로그인 실패:", error);
                alert("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
@@ -28,12 +25,12 @@ function Login() {
                <LoginForm onSubmit={handleLogin}>
                     <FormTitle>로그인</FormTitle>
                     <FormGroup>
-                         <Label htmlFor="username">이름</Label>
+                         <Label htmlFor="email">이메일</Label>
                          <Input
                               type="text"
-                              id="username"
-                              value={username}
-                              onChange={(e) => setUsername(e.target.value)}
+                              id="email"
+                              value={email}
+                              onChange={(e) => setUserEmail(e.target.value)}
                               required
                          />
                     </FormGroup>
