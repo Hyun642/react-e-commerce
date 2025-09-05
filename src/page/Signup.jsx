@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-export default function Login() {
+export default function Signup() {
      const navigate = useNavigate();
-     const [formData, setFormData] = useState({ email: "qwe@123.com", password: "qwe123" });
+     const [formData, setFormData] = useState({ email: "", name: "", password: "", phoneNumber: "" });
 
      const handleChange = (e) => {
           const { name, value } = e.target;
@@ -13,20 +13,27 @@ export default function Login() {
 
      const handleSubmit = (e) => {
           e.preventDefault();
-          localStorage.setItem("accessToken", "dummy-token-for-testing");
-          alert("로그인 되었습니다.");
-          navigate("/");
+          alert("회원가입이 요청되었습니다. (구현되지 않음)");
+          navigate("/login");
      };
 
      return (
           <Page>
-               <Title>로그인</Title>
+               <Title>회원가입</Title>
                <Form onSubmit={handleSubmit}>
                     <Input
                          type="email"
                          name="email"
                          placeholder="이메일"
                          value={formData.email}
+                         onChange={handleChange}
+                         required
+                    />
+                    <Input
+                         type="text"
+                         name="name"
+                         placeholder="이름"
+                         value={formData.name}
                          onChange={handleChange}
                          required
                     />
@@ -38,38 +45,40 @@ export default function Login() {
                          onChange={handleChange}
                          required
                     />
-                    <Button type="submit">로그인</Button>
-                    <SignupButton type="button" onClick={() => navigate("/signup")}>
-                         회원가입
-                    </SignupButton>
+                    <Input
+                         type="tel"
+                         name="phoneNumber"
+                         placeholder="연락처"
+                         value={formData.phoneNumber}
+                         onChange={handleChange}
+                         required
+                    />
+                    <Button type="submit">가입하기</Button>
                </Form>
           </Page>
      );
 }
+
 const Page = styled.div`
      padding: 2rem;
      font-family: sans-serif;
      max-width: 400px;
      margin: 4rem auto;
 `;
-
 const Title = styled.h2`
      margin-bottom: 2rem;
      text-align: center;
 `;
-
 const Form = styled.form`
      display: flex;
      flex-direction: column;
      gap: 1rem;
 `;
-
 const Input = styled.input`
      padding: 0.75rem;
      border: 1px solid #ccc;
      border-radius: 4px;
 `;
-
 const Button = styled.button`
      padding: 0.75rem;
      border: none;
@@ -78,10 +87,4 @@ const Button = styled.button`
      background-color: #333;
      color: white;
      font-size: 1rem;
-`;
-
-const SignupButton = styled(Button)`
-     background-color: #f0f0f0;
-     color: #333;
-     margin-top: 0.5rem;
 `;
