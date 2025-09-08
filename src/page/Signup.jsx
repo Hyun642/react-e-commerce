@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { signup } from "../api/auth/signup";
 
 export default function Signup() {
      const navigate = useNavigate();
@@ -11,10 +12,24 @@ export default function Signup() {
           setFormData((prev) => ({ ...prev, [name]: value }));
      };
 
-     const handleSubmit = (e) => {
+     const handleSubmit = async (e) => {
           e.preventDefault();
-          alert("회원가입이 요청되었습니다. (구현되지 않음)");
-          navigate("/login");
+
+          try {
+               const response = await signup(formData.name, formData.email, formData.password, formData.phoneNumber);
+               console.log("he", response);
+               if (response.status == 201) {
+                    alert(response.data.message);
+                    navigate("/login");
+               } else if (response.data.statusCode == 400) {
+                    alert(response.data.message);
+               } else if (response.data.statusCode == 409) {
+                    alert(response.data.message);
+               }
+          } catch (error) {
+               console.error("회원가입 실패:", error.response.data.message);
+               alert(error.response.data.message);
+          }
      };
 
      return (
