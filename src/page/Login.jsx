@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { login } from "../api/auth/login";
 
 export default function Login() {
      const navigate = useNavigate();
@@ -11,11 +12,16 @@ export default function Login() {
           setFormData((prev) => ({ ...prev, [name]: value }));
      };
 
-     const handleSubmit = (e) => {
+     const handleSubmit = async (e) => {
           e.preventDefault();
-          localStorage.setItem("accessToken", "dummy-token-for-testing");
-          alert("로그인 되었습니다.");
-          navigate("/");
+          const res = await login(formData.email, formData.password);
+          if (res.statusCode === 200) {
+               localStorage.setItem("accessToken", res.data.accessToken);
+               alert("로그인 되었습니다.");
+               navigate("/");
+          } else {
+               alert(res.message);
+          }
      };
 
      return (
