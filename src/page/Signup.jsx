@@ -17,13 +17,12 @@ export default function Signup() {
 
           try {
                const response = await signup(formData.name, formData.email, formData.password, formData.phoneNumber);
-               console.log("he", response);
-               if (response.status == 201) {
+               if (response.status === 201) {
                     alert(response.data.message);
                     navigate("/login");
-               } else if (response.data.statusCode == 400) {
+               } else if (response.data.statusCode === 400) {
                     alert(response.data.message);
-               } else if (response.data.statusCode == 409) {
+               } else if (response.data.statusCode === 409) {
                     alert(response.data.message);
                }
           } catch (error) {
