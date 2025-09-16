@@ -5,7 +5,7 @@ export const getUserAddress = async (name, address) => {
           const res = await instance.get(`/users/address`);
           return res.data;
      } catch (error) {
-          console.error("createTable: ", error.response.data);
+          console.error("getUserAddress: ", error.response.data);
           return error.response.data;
      }
 };
