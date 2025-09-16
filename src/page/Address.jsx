@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import { createUserAddress } from "../api/user/createUserAddress";
 
 const mockAddresses = [
      { id: 1, name: "집", address: "서울시 강남구 테헤란로 123" },
@@ -15,7 +16,7 @@ export default function Address() {
           setAddresses(mockAddresses);
      }, []);
 
-     const handleAdd = () => {
+     const handleAdd = async () => {
           if (!newAddress.name || !newAddress.address) {
                alert("모든 필드를 입력해주세요.");
                return;
@@ -23,6 +24,11 @@ export default function Address() {
           setAddresses([...addresses, { ...newAddress, id: Date.now() }]);
           setNewAddress({ name: "", address: "" });
           setIsAdding(false);
+          const res = await createUserAddress(newAddress.name, newAddress.address);
+          if (res.statusCode === 201) alert(res.message);
+          else {
+               alert(res.message);
+          }
      };
 
      const handleDelete = (id) => {
