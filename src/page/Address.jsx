@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { createUserAddress } from "../api/user/address/createUserAddress";
 import { getUserAddress } from "../api/user/address/getUserAddress";
+import { deleteUserAddress } from "../api/user/address/deleteUserAddress";
 
 export default function Address() {
      const [addresses, setAddresses] = useState([]);
@@ -14,14 +15,14 @@ export default function Address() {
                setAddresses(res);
           };
           fetchData();
-     }, []);
+     }, [addresses]);
 
      const handleAdd = async () => {
           if (!newAddress.name || !newAddress.address) {
                alert("모든 필드를 입력해주세요.");
                return;
           }
-          setAddresses([...addresses, { ...newAddress, id: Date.now() }]);
+          setAddresses([addresses]);
           setNewAddress({ name: "", address: "" });
           setIsAdding(false);
           const res = await createUserAddress(newAddress.name, newAddress.address);
@@ -31,7 +32,12 @@ export default function Address() {
           }
      };
 
-     const handleDelete = (id) => {
+     const handleDelete = async (id) => {
+          const res = await deleteUserAddress(id);
+          if (res.statusCode === 200) alert(res.message);
+          else {
+               alert(res.message);
+          }
           setAddresses(addresses.filter((addr) => addr.id !== id));
      };
 
@@ -65,7 +71,13 @@ export default function Address() {
                               </div>
                               <div>
                                    <Button onClick={() => alert("수정 기능은 구현되지 않았습니다.")}>수정</Button>
-                                   <DeleteButton onClick={() => handleDelete(addr.id)}>삭제</DeleteButton>
+                                   <DeleteButton
+                                        onClick={() => {
+                                             handleDelete(addr.id);
+                                        }}
+                                   >
+                                        삭제
+                                   </DeleteButton>
                               </div>
                          </AddressCard>
                     ))}
