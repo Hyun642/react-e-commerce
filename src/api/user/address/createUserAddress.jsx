@@ -1,4 +1,4 @@
-import { instance } from "../interseptors";
+import { instance } from "../../interseptors";
 
 export const createUserAddress = async (name, address) => {
      try {
