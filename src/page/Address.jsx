@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { createUserAddress } from "../api/user/createUserAddress";
-
-const mockAddresses = [
-     { id: 1, name: "집", address: "서울시 강남구 테헤란로 123" },
-     { id: 2, name: "회사", address: "서울시 서초구 강남대로 456" },
-];
+import { createUserAddress } from "../api/user/address/createUserAddress";
+import { getUserAddress } from "../api/user/address/getUserAddress";
 
 export default function Address() {
      const [addresses, setAddresses] = useState([]);
@@ -13,7 +9,11 @@ export default function Address() {
      const [newAddress, setNewAddress] = useState({ name: "", address: "" });
 
      useEffect(() => {
-          setAddresses(mockAddresses);
+          const fetchData = async () => {
+               const res = await getUserAddress();
+               setAddresses(res);
+          };
+          fetchData();
      }, []);
 
      const handleAdd = async () => {
