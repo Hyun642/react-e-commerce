@@ -72,7 +72,7 @@ export default function Address() {
                                    <p style={{ margin: "0.5rem 0 0 0" }}>{addr.address}</p>
                               </div>
                               <div>
-                                   <Button onClick={() => alert("수정 기능은 구현되지 않았습니다.")}>수정</Button>
+                                   {/* <Button onClick={() => alert("수정 기능은 구현되지 않았습니다.")}>수정</Button> */}
                                    <DeleteButton
                                         onClick={() => {
                                              handleDelete(addr.id);
