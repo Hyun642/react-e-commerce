@@ -22,12 +22,14 @@ export default function Address() {
                alert("모든 필드를 입력해주세요.");
                return;
           }
-          setAddresses([addresses]);
-          setNewAddress({ name: "", address: "" });
-          setIsAdding(false);
+
           const res = await createUserAddress(newAddress.name, newAddress.address);
-          if (res.statusCode === 201) alert(res.message);
-          else {
+          if (res.statusCode === 201) {
+               alert(res.message);
+               setAddresses([addresses]);
+               setNewAddress({ name: "", address: "" });
+               setIsAdding(false);
+          } else {
                alert(res.message);
           }
      };
