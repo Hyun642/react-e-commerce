@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { createBusinessLicense } from "../../api/user/businessLicense/createBusiness-license";
+import { getUserBusinessLicenses } from "../../api/user/businessLicense/getUserBusinessLicense";
 
 const mockBusinessInfo = [{ id: 1, businessId: "123-45-67890", createdAt: "2024-01-01" }];
 
@@ -9,7 +10,11 @@ export default function BusinessInfo() {
      const [newBusinessId, setNewBusinessId] = useState("");
 
      useEffect(() => {
-          setLicenses(mockBusinessInfo);
+          const fetchData = async () => {
+               const res = await getUserBusinessLicenses();
+               setLicenses(res);
+          };
+          fetchData();
      }, []);
 
      const handleAddLicense = async () => {
@@ -17,10 +22,7 @@ export default function BusinessInfo() {
                alert("사업자 등록번호를 입력해주세요.");
                return;
           }
-          setLicenses([
-               ...licenses,
-               { id: Date.now(), businessId: newBusinessId, createdAt: new Date().toISOString().split("T")[0] },
-          ]);
+          setLicenses([...licenses, { businessId: newBusinessId, createdAt: new Date().toISOString().split("T")[0] }]);
           setNewBusinessId("");
 
           const res = await createBusinessLicense(newBusinessId);
