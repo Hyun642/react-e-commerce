@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { createBusinessLicense } from "../../api/user/businessLicense/createBusiness-license";
 import { getUserBusinessLicenses } from "../../api/user/businessLicense/getUserBusinessLicense";
+import { deleteUserBusinessLicense } from "../../api/user/businessLicense/deleteUserBusinessLicense";
 
 const mockBusinessInfo = [{ id: 1, businessId: "123-45-67890", createdAt: "2024-01-01" }];
 
@@ -29,9 +30,10 @@ export default function BusinessInfo() {
           alert(res.message);
      };
 
-     const handleDeleteLicense = (id) => {
-          setLicenses(licenses.filter((license) => license.id !== id));
-          alert("사업자 정보가 삭제되었습니다.");
+     const handleDeleteLicense = async (businessId) => {
+          const res = await deleteUserBusinessLicense(businessId);
+          setLicenses(licenses.filter((license) => license.businessId !== businessId));
+          alert(res.message);
      };
 
      return (
@@ -50,7 +52,7 @@ export default function BusinessInfo() {
                <h3>등록된 사업자 정보</h3>
                <List>
                     {licenses.map((license) => (
-                         <Card key={license.id}>
+                         <Card key={license.businessId}>
                               <div>
                                    <p>
                                         <strong>사업자번호:</strong> {license.businessId}
@@ -59,7 +61,13 @@ export default function BusinessInfo() {
                                         <strong>등록일:</strong> {license.createdAt}
                                    </p>
                               </div>
-                              <DeleteButton onClick={() => handleDeleteLicense(license.id)}>삭제</DeleteButton>
+                              <DeleteButton
+                                   onClick={() => {
+                                        handleDeleteLicense(license.businessId);
+                                   }}
+                              >
+                                   삭제
+                              </DeleteButton>
                          </Card>
                     ))}
                </List>
