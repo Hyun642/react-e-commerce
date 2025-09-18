@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import { createBusinessLicense } from "../../api/user/businessLicense/createBusiness-license";
 
 const mockBusinessInfo = [{ id: 1, businessId: "123-45-67890", createdAt: "2024-01-01" }];
 
@@ -11,7 +12,7 @@ export default function BusinessInfo() {
           setLicenses(mockBusinessInfo);
      }, []);
 
-     const handleAddLicense = () => {
+     const handleAddLicense = async () => {
           if (!newBusinessId) {
                alert("사업자 등록번호를 입력해주세요.");
                return;
@@ -21,7 +22,9 @@ export default function BusinessInfo() {
                { id: Date.now(), businessId: newBusinessId, createdAt: new Date().toISOString().split("T")[0] },
           ]);
           setNewBusinessId("");
-          alert("사업자 정보가 등록되었습니다.");
+
+          const res = await createBusinessLicense(newBusinessId);
+          alert(res.message);
      };
 
      const handleDeleteLicense = (id) => {
