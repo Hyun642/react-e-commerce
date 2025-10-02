@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import { searchShop } from "../api/shops/searchShop";
 
 const mockProducts = [
      { id: 1, name: "멋진 상품 1", price: 10000, imageUrl: "https://via.placeholder.com/200" },
@@ -16,6 +17,7 @@ export default function Main() {
      const [isLoggedIn, setIsLoggedIn] = useState(false);
      const [products, setProducts] = useState([]);
      const [searchTerm, setSearchTerm] = useState("");
+     const [searchResults, setSearchResults] = useState([]);
 
      useEffect(() => {
           const token = localStorage.getItem("accessToken");
@@ -29,8 +31,25 @@ export default function Main() {
           alert("로그아웃 되었습니다.");
      };
 
-     const handleSearch = () => {
-          alert(`'${searchTerm}'으로 검색합니다.`);
+     const handleSearch = async () => {
+          if (!searchTerm.trim()) {
+               setSearchResults([]);
+               return;
+          }
+          try {
+               const response = await searchShop(searchTerm);
+               setSearchResults(response.data || []);
+               console.log("Search Response:", response);
+          } catch (error) {
+               console.error("Search failed:", error);
+               setSearchResults([]);
+          }
+     };
+
+     const handleResultClick = (shopId) => {
+          navigate(`/shops/${shopId}`);
+          setSearchTerm("");
+          setSearchResults([]);
      };
 
      return (
@@ -55,16 +74,25 @@ export default function Main() {
 
                <MainContent>
                     <SearchSection>
-                         <h2>원하는 상품을 찾아보세요</h2>
-                         <div>
+                         <h2>상점 혹은 상품을 찾아보세요</h2>
+                         <SearchWrapper>
                               <SearchInput
                                    type="text"
-                                   placeholder="상품 검색..."
+                                   placeholder="상점 검색..."
                                    value={searchTerm}
                                    onChange={(e) => setSearchTerm(e.target.value)}
                               />
                               <Button onClick={handleSearch}>검색</Button>
-                         </div>
+                              {searchResults.length > 0 && (
+                                   <SearchResultsList>
+                                        {searchResults.map((shop) => (
+                                             <SearchResultItem key={shop.id} onClick={() => handleResultClick(shop.id)}>
+                                                  {shop.name}
+                                             </SearchResultItem>
+                                        ))}
+                                   </SearchResultsList>
+                              )}
+                         </SearchWrapper>
                     </SearchSection>
 
                     <section>
@@ -124,12 +152,39 @@ const SearchSection = styled.section`
      margin-bottom: 3rem;
 `;
 
+const SearchWrapper = styled.div`
+     position: relative;
+     display: inline-block;
+`;
+
 const SearchInput = styled.input`
      padding: 0.5rem;
      width: 300px;
      margin-right: 0.5rem;
      border-radius: 4px;
      border: 1px solid #ccc;
+`;
+
+const SearchResultsList = styled.ul`
+     background: #fff;
+     border: 1px solid #ccc;
+     border-radius: 4px;
+     list-style-type: none;
+     margin-top: 5px;
+     padding: 0;
+     position: absolute;
+     width: 100%;
+     z-index: 1;
+     text-align: left;
+`;
+
+const SearchResultItem = styled.li`
+     padding: 10px;
+     cursor: pointer;
+
+     &:hover {
+          background-color: #f0f0f0;
+     }
 `;
 
 const ProductGrid = styled.div`
