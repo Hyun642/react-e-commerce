@@ -3,6 +3,7 @@ import Main from "./page/Main";
 import Signup from "./page/Signup";
 import Login from "./page/Login";
 import ProductDetail from "./page/ProductDetail";
+import ShopDetail from "./page/ShopDetail";
 import Cart from "./page/Cart";
 import MyPage from "./page/MyPage";
 import Address from "./page/Address";
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/products/:productId" element={<ProductDetail />} />
+                    <Route path="/shops/:shopId" element={<ShopDetail />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/my-page" element={<MyPage />} />
                     <Route path="/my-page/address" element={<Address />} />
